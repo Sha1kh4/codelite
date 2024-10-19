@@ -9,7 +9,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-
+import { auth } from '@/firebase-config'
+import { createUserWithEmailAndPassword } from "firebase/auth";
 export default function SignUp() {
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
@@ -23,25 +24,43 @@ export default function SignUp() {
 
     try {
       // Make an API call using Axios to submit the form
-      const response = await axios.post('http://192.168.0.137:5000/api/signup', {
-        fullName,
-        email,
-        password,
-      })
+      // const response = await axios.post('http://192.168.0.137:5000/api/signup', {
+      //   fullName,
+      //   email,
+      //   password,
+      // })
+
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential: any) => {
+          // Signed up 
+          const user = userCredential.user;
+          if (user) {
+            router.push('/home')
+          } else {
+            setError('Failed to create an account. Please try again.')
+          }
+          // ...
+        })
+        .catch((error: any) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          // ..
+        });
 
       // If successful, redirect to a welcome page or dashboard
-      if (response.status === 200) {
-        router.push('/dashboard')
-      } else {
-        setError('Failed to create an account. Please try again.')
-      }
+      // if (response.status === 200) {
+      //   router.push('/dashboard')
+      // } else {
+      //   setError('Failed to create an account. Please try again.')
+      // }
     } catch (err) {
       setError('Failed to create an account. Please try again.')
     }
   }
 
   return (
-    <div className="flex h-screen w-full items-center justify-center px-4">
+    <div className="flex flex-col gap-10 h-screen w-full items-center justify-center px-4">
+      <h1 className="text-5xl font-bold text-sky-600">CareerFit AI</h1>
       <Card className="w-[350px]">
         <CardHeader>
           <CardTitle className="text-2xl text-center">Sign Up</CardTitle>
