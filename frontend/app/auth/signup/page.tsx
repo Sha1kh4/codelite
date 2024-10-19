@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import axios from 'axios'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -10,6 +11,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export default function SignUp() {
+  const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -19,14 +21,20 @@ export default function SignUp() {
     e.preventDefault()
     setError('')
 
-    // Here you would typically make an API call to your backend to create the user
-    // For this example, we'll just simulate a successful signup
     try {
-      // Simulating an API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      // Make an API call using Axios to submit the form
+      const response = await axios.post('http://192.168.0.137:5000/api/signup', {
+        fullName,
+        email,
+        password,
+      })
 
       // If successful, redirect to a welcome page or dashboard
-      router.push('/dashboard')
+      if (response.status === 200) {
+        router.push('/dashboard')
+      } else {
+        setError('Failed to create an account. Please try again.')
+      }
     } catch (err) {
       setError('Failed to create an account. Please try again.')
     }
@@ -41,6 +49,17 @@ export default function SignUp() {
         <CardContent>
           <form onSubmit={handleSubmit}>
             <div className="grid w-full items-center gap-4">
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="fullName">Full Name</Label>
+                <Input
+                  id="fullName"
+                  type="text"
+                  placeholder="Enter your full name"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  required
+                />
+              </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="email">Email</Label>
                 <Input
