@@ -15,7 +15,7 @@ class ReviewResponse:
     suggestions: List[str]
     link_to_course_searches: List[str]
     link_to_youtube_searches: List[str]
-    missing_skills: List[str]
+    missing_technical_skills: List[str]
 
 class ResumeReviewer:
     """Class to handle resume review operations using Google's Generative AI"""
@@ -35,7 +35,7 @@ class ResumeReviewer:
             "max_output_tokens": 8192,
             "response_schema": content.Schema(
                 type=content.Type.OBJECT,
-                required=["suggestions", "link_to_course_searches", "link_to_youtube_searches", "missing_skills"],
+                required=["suggestions", "link_to_course_searches", "link_to_youtube_searches", "missing_technical_skills"],
                 properties={
                     "suggestions": content.Schema(
                         type=content.Type.ARRAY,
@@ -49,7 +49,7 @@ class ResumeReviewer:
                         type=content.Type.ARRAY,
                         items=content.Schema(type=content.Type.STRING),
                     ),
-                    "missing_skills": content.Schema(
+                    "missing_technical_skills": content.Schema(
                         type=content.Type.ARRAY,
                         items=content.Schema(type=content.Type.STRING),
                     ),
@@ -80,7 +80,7 @@ class ResumeReviewer:
             "suggestions": ["suggestion1", "suggestion2", ...],
             "link_to_course_searches": ["course1", "course2", ...],
             "link_to_youtube_searches": ["search1", "search2", ...],
-            "missing_skills": ["skill1", "skill2", ...]
+            "missing_technical_skills": ["skill1", "skill2", ...](most important first)
         }
         
         Focus on actionable, specific advice that will help the candidate improve their chances.
@@ -96,7 +96,7 @@ class ResumeReviewer:
         """Validate the model's response format"""
         try:
             required_fields = ["suggestions", "link_to_course_searches", 
-                             "link_to_youtube_searches", "missing_skills"]
+                             "link_to_youtube_searches", "missing_technical_skills"]
             response_dict = json.loads(response.text)
             return all(field in response_dict for field in required_fields)
         except (json.JSONDecodeError, AttributeError):
@@ -149,7 +149,7 @@ def reviewed(resume):
             job_description = f.read()
         
         result = reviewer.review(resume, job_description)
-        # debugging step
+        # debugging
         # Print results in a formatted way
         # print("\n=== Resume Review Results ===")
         # print("\nSuggestions:")
@@ -165,7 +165,7 @@ def reviewed(resume):
         #     print(f"{i}. {resource}")
             
         # print("\nMissing Skills:")
-        # for i, skill in enumerate(result.missing_skills, 1):
+        # for i, skill in enumerate(result.missing_technical_skills, 1):
         #     print(f"{i}. {skill}")
             
     except Exception as e:
