@@ -2,6 +2,7 @@
 
 import SearchBox from "@/components/searchBox"
 import { Button } from "@/components/ui/button"
+import { Linkedin } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 
@@ -66,8 +67,9 @@ export default function Welcome() {
     <div className="container h-screen border mx-auto p-8 flex flex-col md:flex-row">
       <div>
         <h1 className="text-5xl font-bold text-sky-600">CareerFit AI</h1>
-        <SearchBox setSearchResults={setSearchResults} />
-
+        <SearchBox setSearchResults={setSearchResults} /> 
+        <Button variant={'outline'} color="primary" className="w-full my-4 w-max"><Linkedin /> Sign Up with LinkedIn</Button>
+        <br />
         <Link href={'/analytics'} className="bg-blue-500 text-white rounded px-5 py-2 text-xl w-full">Go to Analytics Board</Link>
       </div>
       <div className="md:pl-8 max-sm:border-t md:border-l border-black w-full">
