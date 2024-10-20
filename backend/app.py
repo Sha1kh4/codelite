@@ -3,6 +3,7 @@ import os
 import PyPDF2
 from flask_cors import CORS
 from ai import reviewed
+from scraper import scrapte
 
 app = Flask(__name__)
 CORS(app)
@@ -32,9 +33,26 @@ def extract_text_from_pdf(file):
 @app.route('/')
 def index():
     return 'Hello, World!'
+
+@app.route('/jobs', methods=['GET'])
+def jobs():
+    job_title = request.args.get('jobs')
+    return jsonify(scrapte(job_title)), 200
+
 @app.route('/upload', methods=['POST'])
-def upload_form():
-    pass
+def upload():
+    # Get the job title and skills from the form data
+    job_title = request.form.get('job_title')
+    skills = request.form.get('skills')
+
+    # Validate the job title and skills
+    if not job_title:
+        return jsonify({'error': 'Job title is required'}), 400
+    if not skills:
+        return jsonify({'error': 'Skills are required'}), 400
+
+    response_data = reviewed(job_title, skills)
+    return jsonify({'status': 'success', 'data': response_data}), 200
 
 @app.route('/upload_file', methods=['POST'])
 def upload_file():
@@ -44,25 +62,26 @@ def upload_file():
     
     file = request.files['file']
 
-    # If the user does not select a file, the browser submits an empty file without a filename
+    # If the user does not select a file
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
     
     if file and allowed_file(file.filename):
         # Extract text from the PDF
         text = extract_text_from_pdf(file)
-        text = str(text)
         
         if text is None:
             return jsonify({'error': 'Failed to extract text from PDF'}), 500
 
-        # Save the extracted text to a file
-        text_filename = os.path.splitext(file.filename)[0] + '.txt'
-        text_file_path = os.path.join(UPLOAD_FOLDER, text_filename)
-        with open(text_file_path, 'w', encoding='utf-8') as text_file:
-            text_file.write(text)
+        # Get the job title from the form data
+        job_title = request.form.get('job_title')
+        if not job_title:
+            return jsonify({'error': 'Job title is required'}), 400
         
-        return jsonify(reviewed(text)), 200
+        # Perform resume review
+        review_result = reviewed(text, job_title)
+
+        return jsonify(review_result), 200
     
     return jsonify({'error': 'Invalid file format'}), 400
 
