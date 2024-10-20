@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 import os
 import PyPDF2
 from flask_cors import CORS
-from ai import reviewed
+from ai import reviewed,analytics
 from scraper import scrapte
 
 app = Flask(__name__)
@@ -38,6 +38,11 @@ def index():
 def jobs():
     job_title = request.args.get('jobs')
     return jsonify(scrapte(job_title)), 200
+@app.route('/analytics', methods=['GET'])
+def analyis():
+    job_title = request.args.get('jobs')
+    return jsonify(analytics(job_title)), 200
+
 
 @app.route('/upload', methods=['POST'])
 def upload():
@@ -51,8 +56,9 @@ def upload():
     if not skills:
         return jsonify({'error': 'Skills are required'}), 400
 
-    response_data = reviewed(job_title, skills)
-    return jsonify({'status': 'success', 'data': response_data}), 200
+    response_data = reviewed( skills,job_title)
+    
+    return jsonify(response_data), 200
 
 @app.route('/upload_file', methods=['POST'])
 def upload_file():

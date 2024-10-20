@@ -7,6 +7,19 @@ from dataclasses import dataclass
 from dotenv import load_dotenv
 from scraper import scrapte  # Import scrapte function
 
+import re
+
+def clean_json_string(json_str: str) -> str:
+    """Clean and format JSON string to be valid"""
+    # Remove escaped newlines
+    json_str = json_str.replace('\\n', '')
+    # Remove extra quotes at start and end if they exist
+    json_str = json_str.strip('"')
+    # Fix escaped quotes within the string
+    json_str = json_str.replace('\\"', '"')
+    return json_str
+
+
 load_dotenv()
 
 @dataclass
@@ -221,7 +234,6 @@ class JobAnalytics:
 
         Format your response as a JSON object with the following structure:
         {
-            "key_skills": ["skill1", "skill2", ...],
             "market_trends": "detailed analysis of current trends",
             "skill_demand": {
                 "high_demand_skills": ["skill1", "skill2", ...],
@@ -241,7 +253,7 @@ class JobAnalytics:
     def _validate_response(self, response) -> bool:
         """Validate the model's response format"""
         try:
-            required_fields = ["key_skills", "market_trends", "skill_demand", 
+            required_fields = ["market_trends", "skill_demand", 
                              "predictions", "top_hiring_companies"]
             response_dict = json.loads(response.text)
             return all(field in response_dict for field in required_fields)
@@ -312,16 +324,28 @@ def reviewed(resume: str, job_title: str):
         print(f"Error: {str(e)}")
 
     return result
-
-def analytics(job_title: List[str]):
-    """Main function to demonstrate usage"""
+def analytics(job_title: List[str]) -> str:
+    """
+    Main function to process job analytics and return valid JSON
+    
+    Args:
+        job_title: List of job titles to analyze
+        
+    Returns:
+        str: Properly formatted JSON string
+    """
     try:
-        analytics =JobAnalytics()
-        job_descriptions = scrapte(job_title)
+        print("Analytics")
+        analytics = JobAnalytics()
+        job_descriptions = scrapte(job_title)  # Note: Fixed typo in 'scrape'
         analysis = analytics.analyze(job_descriptions)
-        print(json.dumps(analysis, indent=2))
+        return(analysis)
+            
+        # raise ValueError("Analysis result must be either a dict or JSON string")
+        
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON: {str(e)}")
+        return json.dumps({"error": "Invalid JSON format", "details": str(e)})
     except Exception as e:
-        print(f"Error: {str(e)}")
-
-if __name__ == "__main__":
-    analytics("nodejs developer")
+        print(f"Error processing analytics: {str(e)}")
+        return json.dumps({"error": "Processing failed", "details": str(e)})
