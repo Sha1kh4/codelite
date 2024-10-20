@@ -1,14 +1,14 @@
 import requests
-import json
-import os
+# import json
+# import os
 
 def extract_job_description(job):
     try:
         job_description = job["Jobs found"][0]["job_description"]
-        print("Job Description:", job_description)
+        # print("Job Description:", job_description)
         return job_description
     except (IndexError, KeyError) as e:
-        print(f"Error extracting job description: {e}")
+        # print(f"Error extracting job description: {e}")
         return None
 
 def search_jobs(query):
@@ -36,7 +36,8 @@ def search_jobs(query):
         print(f"Error searching jobs: {response.status_code} - {response.text}")
         return []
 def scrapte(job_title):
-    jobs = search_jobs(job_title)  # Assuming this function is defined elsewhere
+    print("Searching for jobs with title:", job_title)
+    jobs = search_jobs(job_title) 
     if jobs and len(jobs) > 0:
         descriptions = []  # Collect all cleaned descriptions
         for job in jobs:
@@ -44,7 +45,7 @@ def scrapte(job_title):
             
             # Clean up the description
             description = description.strip()
-            print(json.dumps(description, indent=2))  # Print original description
+            # print(json.dumps(description, indent=2))  # Print original description
             
             # Remove unwanted message
             unwanted_message = "Please dont share java resume with node js we need here node js consultant"
@@ -59,9 +60,3 @@ def scrapte(job_title):
         
         return descriptions  # Return all cleaned descriptions
     return None
-def main():
-    job_description = scrapte("Node.js")
-    
-
-if __name__ == "__main__":
-    main()
