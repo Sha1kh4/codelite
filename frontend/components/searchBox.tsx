@@ -32,7 +32,7 @@ export default function SearchBox({ setSearchResults }: any) {
 				const skillArray = skills.replace(/\s+/g, '').split(',')
 				formData.append('skills', JSON.stringify(skillArray))
 			}
-			//   formData.append('jobType', jobType)
+			formData.append('job_title', jobType)
 
 			const response = await axios.post(inputType === 'resume' ? 'http://192.168.0.137:5000/upload_file' : 'http://192.168.0.137:5000/upload', formData, {
 				headers: { 'Content-Type': 'multipart/form-data' }
