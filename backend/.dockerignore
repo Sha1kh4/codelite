@@ -1,0 +1,14 @@
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+.git
+.venv
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+*.swp
+.DS_Store
+node_modules/
