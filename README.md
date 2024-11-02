@@ -17,10 +17,8 @@ Additionally, the project supports continuous learning by keeping users updated 
 ## Requirements
 
 - Python 3.12.x
-- Flask
-- Flask-CORS
-- PyPDF2
-- Any additional libraries your application depends on
+- [Node.js](https://nodejs.org/) (v14 or later)
+- pip
 
 ## Backend Installation
 
