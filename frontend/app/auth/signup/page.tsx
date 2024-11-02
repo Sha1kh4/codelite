@@ -1,62 +1,54 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import axios from 'axios'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { auth } from '@/firebase-config'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { auth } from "@/firebase-config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { FirebaseError } from "firebase/app"; // Import FirebaseError
+
 export default function SignUp() {
-  const [fullName, setFullName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const router = useRouter()
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
+    e.preventDefault();
+    setError("");
 
     try {
-      // Make an API call using Axios to submit the form
-      // const response = await axios.post('http://192.168.0.137:5000/api/signup', {
-      //   fullName,
-      //   email,
-      //   password,
-      // })
-
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential: any) => {
-          // Signed up 
-          const user = userCredential.user;
-          if (user) {
-            router.push('/home')
-          } else {
-            setError('Failed to create an account. Please try again.')
-          }
-          // ...
-        })
-        .catch((error: any) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          // ..
-        });
-
-      // If successful, redirect to a welcome page or dashboard
-      // if (response.status === 200) {
-      //   router.push('/dashboard')
-      // } else {
-      //   setError('Failed to create an account. Please try again.')
-      // }
-    } catch (err) {
-      setError('Failed to create an account. Please try again.')
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      if (user) {
+        router.push("/home");
+      } else {
+        setError("Failed to create an account. Please try again.");
+      }
+    } catch (error) {
+      const firebaseError = error as FirebaseError; // Cast to FirebaseError
+      setError(
+        firebaseError.message ||
+          "Failed to create an account. Please try again."
+      );
     }
-  }
+  };
 
   return (
     <div className="flex flex-col gap-10 h-screen w-full items-center justify-center px-4">
@@ -107,12 +99,14 @@ export default function SignUp() {
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-            <Button type="submit" className="w-full mt-4">Sign Up</Button>
+            <Button type="submit" className="w-full mt-4">
+              Sign Up
+            </Button>
           </form>
         </CardContent>
         <CardFooter className="flex justify-center">
           <p className="text-sm text-muted-foreground">
-            Already have an account?{' '}
+            Already have an account?{" "}
             <Link href="/auth/login" className="text-primary hover:underline">
               Log in
             </Link>
@@ -120,5 +114,5 @@ export default function SignUp() {
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }

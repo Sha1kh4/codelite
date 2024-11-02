@@ -68,7 +68,7 @@ export default function Home() {
                   Launch Your Dream Career Today
                 </h2>
                 <p className="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Don't let uncertainty hold you back. With CareerFit, you'll have the guidance and confidence to pursue a fulfilling career that aligns with your passions and strengths.
+                  Don&apos;t let uncertainty hold you back. With CareerFit, you&apos;ll have the guidance and confidence to pursue a fulfilling career that aligns with your passions and strengths.
                 </p>
                 <Button className="bg-primary text-white hover:bg-primary/90">Start Your Journey</Button>
               </div>

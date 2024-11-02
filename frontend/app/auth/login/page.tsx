@@ -1,52 +1,60 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Checkbox } from "@/components/ui/checkbox"
-import { auth } from '@/firebase-config'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Checkbox } from "@/components/ui/checkbox";
+import { auth } from "@/firebase-config";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [rememberMe, setRememberMe] = useState(false)
-  const [error, setError] = useState('')
-  const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
+    e.preventDefault();
+    setError("");
 
     try {
       // Simulating an API call for login
       // await new Promise(resolve => setTimeout(resolve, 1000))
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          // Signed in 
+          // Signed in
           const user = userCredential.user;
-          router.push('/home')
+          console.log(user);
+          router.push("/home");
           // ...
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
+          console.log(errorCode, errorMessage);
         });
 
       // If successful, redirect to dashboard
     } catch (err) {
-      setError('Invalid email or password. Please try again.')
+      console.log(err);
+      setError("Invalid email or password. Please try again.");
     }
-  }
+  };
 
   return (
     <div className="flex flex-col gap-10 items-center justify-center min-h-screen">
-      
       <h1 className="text-5xl font-bold text-sky-600">CareerFit AI</h1>
       <Card className="w-[350px]">
         <CardHeader>
@@ -81,7 +89,9 @@ export default function LoginPage() {
                 <Checkbox
                   id="rememberMe"
                   checked={rememberMe}
-                  onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                  onCheckedChange={(checked) =>
+                    setRememberMe(checked as boolean)
+                  }
                 />
                 <Label htmlFor="rememberMe">Remember me</Label>
               </div>
@@ -91,15 +101,20 @@ export default function LoginPage() {
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-            <Button type="submit" className="w-full mt-4">Log In</Button>
+            <Button type="submit" className="w-full mt-4">
+              Log In
+            </Button>
           </form>
         </CardContent>
         <CardFooter className="flex flex-col items-center space-y-2">
-          <Link href="/forgot-password" className="text-sm text-primary hover:underline">
+          <Link
+            href="/forgot-password"
+            className="text-sm text-primary hover:underline"
+          >
             Forgot your password?
           </Link>
           <p className="text-sm text-muted-foreground">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{" "}
             <Link href="/auth/signup" className="text-primary hover:underline">
               Sign up
             </Link>
@@ -107,5 +122,5 @@ export default function LoginPage() {
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }
