@@ -1,0 +1,10 @@
+FROM koyeb/docker-compose
+
+# Set the working directory inside the container
+WORKDIR .
+
+# Copy everything from the current directory on the host into /motac-apis in the container
+COPY . .
+
+# Run Docker Compose using the compose file in /motac-apis
+CMD ["docker-compose", "-f", "/docker-compose.yaml", "up"]
