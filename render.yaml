@@ -6,6 +6,7 @@ services:
     plan: free
     runtime: docker
     dockerfilePath: ./backend/Dockerfile
+    buildContext: ./backend
     autoDeploy: true
     envVars:
       - key: FLASK_ENV
@@ -17,7 +18,8 @@ services:
     plan: free
     runtime: docker
     dockerfilePath: ./frontend/Dockerfile
+    buildContext: ./frontend
     autoDeploy: true
     envVars:
       - key: NEXT_PUBLIC_API_URL
-        value: http://flask-backend:5000  # Use the service name for communication
+        value: http://flask-backend:5000 # Use the service name for communication
