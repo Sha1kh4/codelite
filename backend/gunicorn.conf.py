@@ -2,7 +2,7 @@ import multiprocessing
 import os
 
 # Number of worker processes for handling requests
-workers = multiprocessing.cpu_count() * 2 + 1
+workers = max(1, multiprocessing.cpu_count() - 1)  # Reduced worker count
 
 # Number of threads for handling requests
 threads = 4
@@ -11,29 +11,25 @@ threads = 4
 bind = "0.0.0.0:5000"
 
 # Timeout for graceful workers restart
-timeout = 120
+timeout = 180  # Increased timeout
 
 # Environment variables
 raw_env = [
     "FLASK_APP=app:app",
-    "FLASK_ENV=development"
+    "FLASK_ENV=production"  # Changed to production
 ]
 
 # The type of workers to use
-worker_class = "sync"  # Changed from 'gevent' to 'sync'
+worker_class = "gevent"  # Changed to gevent for better concurrency
 
 # The maximum number of requests a worker will process before restarting
-max_requests = 1000
+max_requests = 500  # Experiment with lower values
 max_requests_jitter = 50
 
 # Logging
-accesslog = "-"
-errorlog = "-"
+accesslog = "/path/to/access.log"  # Log to file
+errorlog = "/path/to/error.log"  # Log to file
 loglevel = "info"
-
-# SSL config if needed
-# keyfile = '/path/to/keyfile'
-# certfile = '/path/to/certfile'
 
 # Process naming
 proc_name = "gunicorn_flask_app"
