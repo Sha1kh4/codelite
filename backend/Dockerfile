@@ -16,7 +16,7 @@ RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 # Copy only requirements first for caching
-COPY req.txt .
+COPY req.txt ./
 RUN pip install --no-cache-dir -r req.txt \
     && pip install --no-cache-dir gunicorn gevent
 
@@ -35,11 +35,11 @@ WORKDIR /app
 # Copy virtual env from builder
 COPY --from=builder /opt/venv /opt/venv
 
-# Copy configuration and JSON files for caching efficiency
-COPY gunicorn.conf.py .env ./
+# Copy configuration files for caching efficiency
+COPY gunicorn.conf.py ./
 
 # Copy Python files
-COPY app.py ai.py scraper.py ./
+COPY app.py ai.py scraper.py ./ 
 
 # Set up non-root user and permissions in one step
 RUN adduser -D appuser && \
