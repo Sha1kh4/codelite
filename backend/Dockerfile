@@ -16,9 +16,8 @@ RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 # Copy only requirements first for caching
-COPY req.txt ./
-RUN pip install --no-cache-dir -r req.txt \
-    && pip install --no-cache-dir gunicorn gevent
+COPY req.txt . 
+RUN pip install --no-cache-dir -r req.txt
 
 # Runtime stage
 FROM python:3.12-alpine
@@ -35,11 +34,11 @@ WORKDIR /app
 # Copy virtual env from builder
 COPY --from=builder /opt/venv /opt/venv
 
-# Copy configuration files for caching efficiency
-COPY gunicorn.conf.py ./
+# Copy configuration and JSON files for caching efficiency
+COPY .env ./
 
 # Copy Python files
-COPY app.py ai.py scraper.py ./ 
+COPY app.py ai.py scraper.py ./
 
 # Set up non-root user and permissions in one step
 RUN adduser -D appuser && \
@@ -52,5 +51,5 @@ USER appuser
 # Expose Flask port
 EXPOSE 5000
 
-# Run the application with gunicorn
-CMD ["gunicorn", "--config", "gunicorn.conf.py", "app:app"]
+# Run the application with waitress
+CMD ["waitress-serve", "--listen=*:8000", "app:app"]
