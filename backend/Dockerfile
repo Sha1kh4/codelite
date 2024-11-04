@@ -34,8 +34,6 @@ WORKDIR /app
 # Copy virtual env from builder
 COPY --from=builder /opt/venv /opt/venv
 
-# Copy configuration and JSON files for caching efficiency
-COPY .env ./
 
 # Copy Python files
 COPY app.py ai.py scraper.py ./
