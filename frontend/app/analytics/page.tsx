@@ -34,7 +34,7 @@ export default function Analytics() {
 
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/analytics?jobs=${jobName}`
+        `${process.env.NEXT_PUBLIC_API_URL || 'https://wonderful-kindness-production.up.railway.app/'}/analytics?jobs=${jobName}`
       );
       setAnalyticsData(response.data);
     } catch (err) {

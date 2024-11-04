@@ -35,8 +35,8 @@ export default function SearchBox({ setSearchResults }: any) {
       formData.append("job_title", jobType);
       const response = await axios.post(
         inputType === "resume"
-          ? "${process.env.NEXT_PUBLIC_API_URL}/upload_file"
-          : "${process.env.NEXT_PUBLIC_API_URL}/upload",
+          ? "${process.env.NEXT_PUBLIC_API_URL || 'https://wonderful-kindness-production.up.railway.app/'}/upload_file"
+          : "${process.env.NEXT_PUBLIC_API_URL || 'https://wonderful-kindness-production.up.railway.app/'}/upload",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
