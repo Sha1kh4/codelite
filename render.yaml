@@ -4,23 +4,20 @@ services:
     type: web
     env: docker
     plan: free
+    runtime: docker
     dockerfilePath: ./backend/Dockerfile
     autoDeploy: true
-    ports:
-      - port: 5000
-        protocol: HTTP
+    envVars:
+      - key: FLASK_ENV
+        value: development
 
   - name: nextjs-frontend
     type: web
     env: docker
     plan: free
+    runtime: docker
     dockerfilePath: ./frontend/Dockerfile
     autoDeploy: true
     envVars:
       - key: NEXT_PUBLIC_API_URL
-        value: http://flask-backend:5000
-    ports:
-      - port: 3000
-        protocol: HTTP
-    dependsOn:
-      - flask-backend
+        value: http://flask-backend:5000  # Use the service name for communication
