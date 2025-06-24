@@ -213,4 +213,3 @@ Make sure you have [Docker](https://docs.docker.com/get-docker/) and [Docker Com
 ## Contributing
 
 Feel free to submit issues or pull requests to enhance this project. Contributions are welcome!
-Here’s the updated README with additional instructions on how to change environment variables when using Docker Compose:
