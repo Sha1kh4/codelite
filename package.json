@@ -4,10 +4,16 @@
   "description": "The AI-enhanced resume analysis and career guidance project tackles a common problem faced by job seekers: aligning their resumes with employer expectations and evolving market demands. Many individuals, especially students and early-career professionals, struggle to present their skills and experiences effectively. Often, their resumes lack the right keywords, formatting, and relevance to attract recruiters or pass through Applicant Tracking Systems (ATS).",
   "main": "index.js",
   "scripts": {
-    "flask-prod": "pip3 install -r backend/req.txt && python3 -m flask --app backend/app run -p 8000",
-    "next-dev": "cd frontend && pnpm install && pnpm run dev",
-    "next-prod": "cd frontend && pnpm install && pnpm run build && pnpm run start",
-    "start": "concurrently \" npm run next-prod\" \"npm run flask-prod\""
+    "flask-install": "cd backend && pip install -r req.txt", 
+    "flask-dev": "cd backend && python -m flask --app app run -p 8000",
+    "flask-prod": "cd backend && python -m waitress --listen=*:8000 app:app", 
+    "next-install": "cd frontend && npm install",
+    "next-dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "next-prod": "cd frontend && npm run start",
+    "install": "npm run flask-install && npm run next-install",
+    "dev": "concurrently \"npm run next-dev\" \"npm run flask-dev\"",
+    "prod": "concurrently \"npm run next-prod\" \"npm run flask-prod\""
 
   },
   "keywords": [],
