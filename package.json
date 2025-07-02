@@ -10,7 +10,7 @@
     "next-install": "cd frontend && npm install",
     "next-dev": "cd frontend && npm run dev",
     "build": "cd frontend && npm run build",
-    "next-prod": "cd frontend && npm run start",
+    "next-prod": "cd frontend && node .next/standalone/server.js",
     "install": "npm run flask-install && npm run next-install",
     "dev": "concurrently \"npm run next-dev\" \"npm run flask-dev\"",
     "start": "concurrently \"npm run next-prod\" \"npm run flask-prod\""
