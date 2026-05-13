@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 import os
 import PyPDF2
 from flask_cors import CORS
-from ai import reviewed,analytics
+from ai import reviewed,JobAnalytics
 from scraper import scrapte
 
 app = Flask(__name__)
@@ -41,7 +41,8 @@ def jobs():
 @app.route('/analytics', methods=['GET'])
 def analyis():
     job_title = request.args.get('jobs')
-    return jsonify(analytics(job_title)), 200
+    analyzer = JobAnalytics()
+    return jsonify(analyzer.analyze(job_title)), 200
 
 
 @app.route('/upload', methods=['POST'])
