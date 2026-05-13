@@ -72,7 +72,7 @@ class ResumeReviewer:
         }
         
         return genai.GenerativeModel(
-            model_name="gemini-1.5-flash",
+            model_name="gemini-2.5-flash",
             generation_config=generation_config,
             system_instruction=self._get_system_prompt()
         )
@@ -213,7 +213,7 @@ class JobAnalytics:
         }
         
         return genai.GenerativeModel(
-            model_name="gemini-1.5-flash",
+            model_name="gemini-2.5-flash",
             generation_config=generation_config,
             system_instruction=self._get_system_prompt()
         )
